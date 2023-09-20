@@ -1,5 +1,6 @@
 import { User } from "../models/user.model";
-
+import sessionController from "../controller/session.controller";
+import jwt from "jsonwebtoken";
 class UserService {
     async RegisterUser(Details) {
         if(!Details){
@@ -33,6 +34,8 @@ class UserService {
         if(!isUser){
             return;
         }
+        const token = jwt.sign({ email: isUser.email, role: isUser.role }, process.env.SECRET_KEY, { expiresIn: '2d' });
+        await sessionController.session(isUser);
         return isUser;
     }
 

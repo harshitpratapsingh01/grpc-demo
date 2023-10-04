@@ -1,25 +1,17 @@
 import mongoose, { trusted } from "mongoose";
 
 const UserSchema = new mongoose.Schema({
-    username: {
-        type: String,
-        required: true,
-    },
-    email: {
-        type: String,
-        required: true,
-    },
-    password: {
-        type: String,
-        required: true,
-    },
-    role: {
-        type: String,
-        enum: ["Admin", "User", "Vandor"]
-    }
+    username: { type: String, unique: true, required: true, },
+    name: { type: String, required: true },
+    email: { type: String, unique: true, required: true, },
+    password: { type: String, required: true, },
+    mobile_no: { type: Number, unique: true, required: true },
+    profilePic: { type: Buffer, required: false },
+    careatedAt: { type: Date, default: Date.now(), },
+    updatedAt: { type: Date, default: Date.now() }
 });
 const User = mongoose.model("User", UserSchema);
-export {User};
+export { User };
 
 // import mongoose, { Document, Schema } from 'mongoose'; 
 

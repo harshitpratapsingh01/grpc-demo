@@ -4,27 +4,30 @@ package userPackage;
 
 service UserService {
   rpc RegisterUser(User) returns (UserResponse){};
-  rpc GetUserDetails(UserRequestUsername) returns (User){};
+  rpc GetUserDetails(Empty) returns (User){};
   rpc LoginUser(UserRequest) returns (UserResponseLogin);
-  rpc GetUsers(GetAllUsers) returns (stream User){};
+  rpc LogoutUser(Empty) returns (UserResponse){};
+  rpc ForgotPassword(ForgotRequest) returns (Empty);   
 }
 
 message User {
   string username = 1;
-  string email = 2;
-  string password = 3;
+  string name = 2;
+  string email = 3;
+  string password = 4;
+  int32 mobile_no = 5;
 }
 
 
 message UserResponse {
     bool success = 1;
     string message = 2;
-    User data = 3;
+    User Userdata = 3;
 }
 
-message UserRequestUsername {
-    string username = 1;
-}
+// message UserRequestUsername {
+//     string username = 1;
+// }
 
 message UserRequest {
   string email = 1;
@@ -35,6 +38,12 @@ message UserResponseLogin {
     bool success = 1;
     string message = 2;
     User user_data = 3;
+    string token = 4;
 }
 
-message GetAllUsers {}
+
+message ForgotRequest{
+  string email = 1;
+}
+
+message Empty {}

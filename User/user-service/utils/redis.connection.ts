@@ -1,6 +1,6 @@
 import * as  redis from "redis";
 
-let client;
+export let client;
 
 (async function(){
     try{
@@ -27,6 +27,20 @@ class Redis{
         }
         catch(error){
             console.log("Redis connection Error: ", error);
+        }
+    }
+
+    async logout_session_redis(isUser) {
+        try {
+            await client.SET(isUser.username, JSON.stringify({
+                userID: isUser._id,
+                status: false
+            }));
+            const session = await client.GET(isUser.username);
+            console.log(session);
+        }
+        catch (err) {
+            console.log(err);
         }
     }
 }

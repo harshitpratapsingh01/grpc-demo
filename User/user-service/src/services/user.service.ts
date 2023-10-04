@@ -1,6 +1,7 @@
 import { User } from "../models/user.model";
 import sessionController from "../controller/session.controller";
 import jwt from "jsonwebtoken";
+
 class UserService {
     async RegisterUser(Details) {
         if(!Details){
@@ -11,11 +12,11 @@ class UserService {
         return response;
     }
 
-    async GetUserDetails(username){
-        if(!username){
+    async GetUserDetails(userId){
+        if(!userId){
             return;
         }
-        const user = await User.findOne({ username: username });
+        const user = await User.findOne({ _id: userId.id });
         if(!user){
             return;
         }
@@ -34,17 +35,31 @@ class UserService {
         if(!isUser){
             return;
         }
-        const token = jwt.sign({ email: isUser.email, role: isUser.role }, process.env.SECRET_KEY, { expiresIn: '2d' });
+        const token = jwt.sign({ id: isUser._id, username: isUser.username }, 
+            process.env.SECRET_KEY, 
+            { expiresIn: '2d' }
+        );
         await sessionController.session(isUser);
-        return isUser;
+        return {isUser,token};
     }
 
-    async GetUsers(){
-        const users = await User.find();
-        if(!users){
-            return;
+    // async GetUsers(){
+    //     const users = await User.find();
+    //     if(!users){
+    //         return;
+    //     }
+    //     return users;
+    // }
+
+    async LogoutUser(user){
+        const isUser = await User.findOne({_id: user.id});
+        if(!isUser){
+            return null;
         }
-        return users;
+        if(!await sessionController.sessionOut(isUser)){
+            return null;
+        }
+        return isUser
     }
 }
 

@@ -30,6 +30,22 @@ class SessionService{
             return false;
         }
     }
+
+    async update_session(user_id) {
+        const isSession: any = await Session.findOne({ userId: user_id } )
+        if (isSession) {
+            if (isSession.status) {
+                await Session.findOneAndUpdate( { userId: user_id }, { status: !isSession.status } );
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        else {
+            return false;
+        }
+    }
 }
 
 export default new SessionService();
